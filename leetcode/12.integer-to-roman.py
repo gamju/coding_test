@@ -7,18 +7,22 @@
 # @lc code=start
 class Solution:
     def intToRoman(self, num: int) -> str:
-        str_list = {1:'I', 5:'V', 10:'X', 100:'C', 500:'D', 1000:'M'}
+        str_list = {1:'I', 5:'V', 10:'X', 50: 'L', 100:'C', 500:'D', 1000:'M'}
         value_list = list(str_list.keys())
-        M_count = int(num/1000)
-        num = num%1000
-        answer_list = []
-        print(num)
-        while(num):
-            for idx in range(value_list.__len__()):
-                if value_list[idx] > num:
-                    num = num%value_list[idx-1]
-                    print(num)
-                    answer_list.append(str_list[value_list[idx-1]])
+        for idx, value in range(value_list.__len__() - 1, 1):
+            remain_num = num / value
+            num = num % value
+            # 몫이 4,9 그 이외
+            if remain_num == 0:
+                continue
+            if remain_num == 4:
+                
+            elif remain_num == 9:
+            else:
+
+
+                 
+
         return answer_list
 
 
