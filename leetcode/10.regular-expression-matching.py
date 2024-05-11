@@ -38,52 +38,75 @@
 # Input: s = "aa", p = "a*"
 # Output: true
 # Explanation: '*' means zero or more of the preceding element, 'a'. Therefore,
-# by repeating 
-#
+# by repeating 'a' once, it becomes "aa".
+# 
+# 
+# Example 3:
+# 
+# 
+# Input: s = "ab", p = ".*"
+# Output: true
+# Explanation: ".*" means "zero or more (*) of any character (.)".
+# 
+# 
+# 
+# Constraints:
+# 
+# 
+# 1 <= s.length <= 20
+# 1 <= p.length <= 20
+# s contains only lowercase English letters.
+# p contains only lowercase English letters, '.', and '*'.
+# It is guaranteed for each appearance of the character '*', there will be a
+# previous valid character to match.
 
 # @lc code=start
 class Solution:
-    def isMatch(self, s: str, p: str) -> bool:
-        s_len = s.__len__()
-        p_len = p.__len__()
-        
-        cnt = 0
-        p_idx = 0
-        for s_idx in range(s_len):
-            cur_s = s[s_idx]
-
-            if p_idx < p_len:
-                cur_p = p[p_idx]
+    #중복 패턴 삭제 *a*a*a --> *a
+    def zip_pattern(self, pattern):
+        split_pattern = pattern.split("*")
+        zipped_pattern = ""
+        cur_pattern = ""
+        for i in split_pattern[:-1]:
+            print(i, cur_pattern)
+            if i.__len__() > 2:
+                cur_pattern = i[-1:]
+                zipped_pattern += i + "*"
+            elif i.__len__() == 0:
+                break
             else:
+                if i == cur_pattern:
+                    continue
+                else:
+                    cur_pattern = i
+                    zipped_pattern += i + "*"
+        zipped_pattern += split_pattern[-1]
+        return zipped_pattern
+                
+
+            
+
+    def isMatch(self, s: str, p: str) -> bool:
+        if p.find("*") > -1:
+            p = self.zip_pattern(p)
+        print(p)
+        def rec(ss: str, pp: str) -> bool:
+            # print(ss, pp)
+            if ss.__len__() == 0 and pp.__len__() == 0:     
+                # print(3)           
+                return True            
+            if pp.__len__() == 0 :           
+                # print(4)
                 return False
             
-            if cur_p == ".":
-                cur_p = cur_s
-                prev_p = "."
-                p_idx += 1
-            elif cur_p == "*":
-                cur_p = prev_p
-                if cur_p == ".":
-                    cur_p = cur_s
-                    prev_p = "."
+            cur_comp = bool(ss) and pp[0] in {ss[0], '.'}
+            if pp.__len__() > 1 and pp[1] == "*":
+                return rec(ss, pp[2:]) or cur_comp and rec(ss[1:], pp)
             else:
-                prev_p = cur_p
-                p_idx += 1
-                
-            if cur_p == cur_s:
-                cnt+=1
-                last_cnt = 1
-            else:
-                last_cnt = 0
-                if cur_p == "*":
-                    p_idx += 1
-        
-        print(cnt, last_cnt)
-        if (cnt == s_len) and (last_cnt)== 1:
-            return True
-        else:
-            return False
-        # return 0
-        
+                # print(2)
+                return cur_comp and rec(ss[1:], pp[1:])
+        return rec(s,p)
+
+
 # @lc code=end
 
