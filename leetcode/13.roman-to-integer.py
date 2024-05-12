@@ -83,6 +83,33 @@
 # @lc code=start
 class Solution:
     def romanToInt(self, s: str) -> int:
+        num_dict = {'I': 1, 'V':5, 'X':10,'L':50,'C':100,'D':500,'M':1000}
+        minimum_str = ['I', 'V', 'X', 'L', 'C', 'D', 'M']
+        result_num = 0
+        for idx in range(minimum_str.__len__()):
+            cur_num = 0
+            one_loc = s.find(minimum_str[idx])
+            five_loc = s.find(minimum_str[idx + 1])
+            if five_loc + one_loc > -1:
+                continue
+            
+            if one_loc == -1:
+                cur_num = num_dict[minimum_str[idx + 1]]
+            else:
+                for sub_idx in s[one_loc:]:
+                    if sub_idx != minimum_str[idx]:
+                        cur_num = num_dict[sub_idx] - cur_num
+                    else:
+                        cur_num += num_dict[sub_idx]
+
+
+                cur_num += num_dict[minimum_str[idx + 1]]
+
+                
+                
+
+        return result_num
+        
         
 # @lc code=end
 
