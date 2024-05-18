@@ -81,32 +81,59 @@
 #
 
 # @lc code=start
-class Solution:
-    def romanToInt(self, s: str) -> int:
-        num_dict = {'I': 1, 'V':5, 'X':10,'L':50,'C':100,'D':500,'M':1000}
-        minimum_str = ['I', 'V', 'X', 'L', 'C', 'D', 'M']
-        result_num = 0
-        for idx in range(minimum_str.__len__()):
-            cur_num = 0
-            one_loc = s.find(minimum_str[idx])
-            five_loc = s.find(minimum_str[idx + 1])
-            if five_loc + one_loc > -1:
-                continue
-            
-            if one_loc == -1:
-                cur_num = num_dict[minimum_str[idx + 1]]
+class Solution(object):
+    def sub_str_process(self, sub_s, exp, str_list):
+        result_int = 0
+        if sub_s[0] != str_list[0]:
+            result_int = 5 + sub_s[1:].__len__()
+        else:
+            if sub_s.__len__() < 2:
+                result_int = 1
             else:
-                for sub_idx in s[one_loc:]:
-                    if sub_idx != minimum_str[idx]:
-                        cur_num = num_dict[sub_idx] - cur_num
-                    else:
-                        cur_num += num_dict[sub_idx]
+                if sub_s[1] != str_list[0]:
+                    result_int = str_list.index(sub_s[1]) * 5 - 1
+                    result_int += sub_s[2:].__len__()
+                else:
+                    result_int = sub_s.__len__()
+        result_int = result_int*(10**exp)
+            
+        return result_int
+    def romanToInt(self, s):
+        num_dict = {'I': 1, 'V':5, 'X':10,'L':50,'C':100,'D':500,'M':1000}
+        minimum_str = [['I', 'V', 'X'], ['X', 'L', 'C'], ['C', 'D', 'M']]
+        result_num = 0
 
+        for exp, str_list in enumerate(minimum_str):
+            str_to_int = 0
+            one_loc = s.find(str_list[0])
+            five_loc = s.find(str_list[1])
+            ten_loc = s.find(str_list[2])
 
-                cur_num += num_dict[minimum_str[idx + 1]]
-
+            sub_str = ""
+            
+            if five_loc > -1 and one_loc > -1:
+                if five_loc < one_loc:
+                    sub_str = s[five_loc:]
+                    s = s[:five_loc]
+                else:
+                    sub_str = s[one_loc:]
+                    s = s[:one_loc]
+            else:
+                if five_loc > -1:
+                    sub_str = s[five_loc:]
+                    s = s[:five_loc]
                 
+                if one_loc > -1:
+                    sub_str = s[one_loc:]
+                    s = s[:one_loc]
                 
+
+            print(sub_str, s, exp, str_list, result_num)
+            if sub_str.__len__() > 0:
+                str_to_int = self.sub_str_process(sub_str, exp, str_list)
+            result_num += str_to_int
+        result_num += s.__len__()*1000
+
 
         return result_num
         
