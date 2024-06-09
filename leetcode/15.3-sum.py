@@ -1,3 +1,8 @@
+# @before-stub-for-debug-begin
+# from python3problem15 import *
+from typing import *
+# @before-stub-for-debug-end
+
 #
 # @lc app=leetcode id=15 lang=python3
 #
@@ -61,8 +66,12 @@
 #
 
 # @lc code=start
-class Solution:
-    def threeSum(self, nums: list[int]) -> list[list[int]]:
+class Solution(object):
+    def threeSum(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[List[int]]
+        """
         sorted_nums = sorted(nums)
         # if 0 in sorted_nums:
         #     zero_loc = sorted_nums.index(0)
@@ -71,24 +80,25 @@ class Solution:
 
         result_num_list = []
         result_sort_num_list = []
-
-        zero_loc = 0
-        if nums.__len__() > 50:
-            for f_idx in range(sorted_nums.__len__() - 1):
-                if sorted_nums[f_idx] * sorted_nums[f_idx + 1] < -1:
-                    zero_loc = f_idx + 5
-                    break
-
-        print(zero_loc, sorted_nums[zero_loc], sorted_nums)
-        for i in range(nums.__len__() - max(2, zero_loc)):
-            for j in range(i + 1, nums.__len__() - 1):
-                for k in range(j + 1, nums.__len__()):
-                    if nums[i] + nums[j] + nums[k] == 0:
-                        cur_triplet_num = [nums[i], nums[j], nums[k]]
-                        if sorted(cur_triplet_num) not in result_sort_num_list:
-                            result_sort_num_list.append(sorted(cur_triplet_num))
-                            result_num_list.append(cur_triplet_num)
-        print(result_num_list.__len__())
+        
+        for i in range(sorted_nums.__len__()):
+            if i > 0 and sorted_nums[i] == sorted_nums[i - 1]:
+                continue
+            j = i+1
+            k = sorted_nums.__len__() - 1
+            while(j < k):
+                sum = sorted_nums[i] +sorted_nums[j] + sorted_nums[k]
+                if(sum > 0):
+                    k = k - 1
+                    continue
+                elif(sum < 0):
+                    j = j + 1
+                else:
+                    result_num_list.append([sorted_nums[i],sorted_nums[j],sorted_nums[k]])
+                    j = j + 1
+                    while sorted_nums[j] == sorted_nums[j-1] and j < k:
+                        j = j+1
+            
         return result_num_list
 
 
